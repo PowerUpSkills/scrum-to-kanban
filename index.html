@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transitioning from Scrum to Kanban</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --light: #ecf0f1;
+            --dark: #34495e;
+            --text: #333;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background-color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        .presentation-container {
+            max-width: 100%;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        
+        .slide {
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .slide:nth-child(odd) {
+            background-color: white;
+        }
+        
+        .slide-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            border-radius: 8px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            text-align: center;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            color: var(--primary);
+        }
+        
+        h4 {
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        ul, ol {
+            margin-bottom: 1.5rem;
+            margin-left: 2rem;
+        }
+        
+        li {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .card-header {
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.4rem;
+        }
+        
+        .highlight {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .quote {
+            font-style: italic;
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            margin: 1.5rem 0;
+            color: var(--dark);
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .flex {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .column {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        .comparison-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .button {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .step-card {
+            position: relative;
+            padding-left: 4rem;
+            margin-bottom: 2rem;
+        }
+        
+        .step-number {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3rem;
+            height: 3rem;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 1200px;
+            margin: 2rem auto;
+        }
+        
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 6px;
+            background-color: var(--primary);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -3px;
+        }
+        
+        .timeline-container {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+        }
+        
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: white;
+            border: 4px solid var(--primary);
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        
+        .left {
+            left: 0;
+        }
+        
+        .right {
+            left: 50%;
+        }
+        
+        .left::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            right: 30px;
+            border: medium solid var(--light);
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent white;
+        }
+        
+        .right::before {
+            content: " ";
+            height: 0;
+            position: absolute;
+            top: 22px;
+            width: 0;
+            z-index: 1;
+            left: 30px;
+            border: medium solid var(--light);
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+        
+        .right::after {
+            left: -16px;
+        }
+        
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: white;
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .kanban-board {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin: 2rem 0;
+        }
+        
+        .kanban-column {
+            min-width: 250px;
+            background-color: #f4f5f7;
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .kanban-column-header {
+            font-weight: bold;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .wip-limit {
+            background-color: var(--primary);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        
+        .kanban-card {
+            background-color: white;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .kanban-card.bug {
+            border-left-color: var(--accent);
+        }
+        
+        .kanban-card.tech-debt {
+            border-left-color: var(--warning);
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background-color: rgba(52, 152, 219, 0.1);
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .process-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .process-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 1rem;
+            position: relative;
+        }
+        
+        .process-step:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .process-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--secondary);
+            color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .cta-section {
+            background-color: var(--secondary);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .cta-section h2 {
+            color: white;
+            border-bottom: none;
+        }
+        
+        .cta-buttons {
+            margin-top: 2rem;
+        }
+        
+        .cta-button {
+            background-color: white;
+            color: var(--secondary);
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 1rem;
+            display: inline-block;
+            transition: var(--transition);
+        }
+        
+        .cta-button:hover {
+            background-color: var(--light);
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .navigation {
+            position: sticky;
+            top: 0;
+            background-color: var(--secondary);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            z-index: 100;
+        }
+        
+        .nav-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: var(--accent);
+            width: 0%;
+        }
+
+        .version-chart {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .release-strategy {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .release-card {
+            flex: 1;
+            min-width: 250px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: var(--transition);
+            border-top: 4px solid var(--primary);
+        }
+        
+        .release-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .release-card h4 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::after {
+                left: 31px;
+            }
+            
+            .timeline-container {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-container::before {
+                left: 60px;
+                border: medium solid white;
+                border-width: 10px 10px 10px 0;
+                border-color: transparent white transparent transparent;
+            }
+            
+            .left::after, .right::after {
+                left: 15px;
+            }
+            
+            .right {
+                left: 0%;
+            }
+            
+            .comparison-table {
+                font-size: 0.9rem;
+            }
+            
+            .comparison-table th, .comparison-table td {
+                padding: 0.7rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="navigation">
+            <div class="nav-title">Transitioning to Kanban</div>
+            <div class="nav-links">
+                <a href="#overview" class="nav-link">Overview</a>
+                <a href="#differences" class="nav-link">Key Differences</a>
+                <a href="#roles" class="nav-link">Role Changes</a>
+                <a href="#releases" class="nav-link">Release Strategies</a>
+                <a href="#implementation" class="nav-link">Implementation</a>
+            </div>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <div class="slide" id="overview">
+            <div class="header">
+                <h1>Transitioning from Scrum to Kanban</h1>
+                <p>A comprehensive guide to adapting your processes, roles, and mindset</p>
+            </div>
+            
+            <div class="slide-content">
+                <div class="quote">
+                    "We cannot solve our problems with the same thinking we used when we created them." - Albert Einstein
+                </div>
+                
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header">Why Kanban?</div>
+                        <ul>
+                            <li>More flexibility in handling work items</li>
+                            <li>Better visualization of workflow and bottlenecks</li>
+                            <li>Reduced overhead from ceremonies</li>
+                            <li>Focus on continuous delivery rather than sprints</li>
+                            <li>Adaptation to changing priorities without waiting for sprint boundaries</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">What Will Change?</div>
+                        <ul>
+                            <li>No more fixed-length sprints</li>
+                            <li>Roles evolve (Scrum Master, Product Owner)</li>
+                            <li>Release process becomes more flexible</li>
+                            <li>Metrics shift from velocity to flow measurements</li>
+                            <li>Work organized by swimlanes rather than sprints</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>Transition Overview</h3>
+                <p>Moving from Scrum to Kanban is not just about changing your board - it's about shifting your mindset from batch processing to continuous flow. This presentation will guide you through the key aspects of this transition:</p>
+                
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="process-icon">1</div>
+                        <div>Understand the Differences</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-icon">2</div>
+                        <div>Adapt Team Roles</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-icon">3</div>
+                        <div>Rethink Release Process</div>
+                    </div>
+                    <div class="process-step">
+                        <div class="process-icon">4</div>
+                        <div>Implement New Practices</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide" id="implementation">
+            <div class="slide-content">
+                <h2>Implementing Kanban</h2>
+                
+                <div class="highlight">
+                    <p>A successful transition to Kanban requires thoughtful implementation. Here's a structured approach to help your team make the change effectively.</p>
+                </div>
+                
+                <h3>Setting Up Your Kanban Board in Jira</h3>
+                
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="card">
+                        <div class="card-header">Define Your Workflow</div>
+                        <p>Start by mapping your current workflow to identify all the states work passes through:</p>
+                        <ul>
+                            <li>To Do: Work that's ready to be picked up</li>
+                            <li>In Progress: Work that's actively being done</li>
+                            <li>In Review: Work that's being reviewed or tested</li>
+                            <li>Testing: Work undergoing QA or validation</li>
+                            <li>Done: Completed work ready for release</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="card">
+                        <div class="card-header">Establish WIP Limits</div>
+                        <p>Work-in-progress limits ensure work flows smoothly without overwhelming the team:</p>
+                        <ul>
+                            <li>Start with <strong>2n-1</strong> (where n is the number of team members)</li>
+                            <li>For a team of 6, set a WIP limit of 11 across all in-progress columns</li>
+                            <li>Distribute limits across columns based on capacity (e.g., In Progress: 6, In Review: 3, Testing: 2)</li>
+                            <li>Adjust based on data and team feedback</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="card">
+                        <div class="card-header">Implement Swimlanes</div>
+                        <p>Configure swimlanes to categorize work types in Jira:</p>
+                        <ol>
+                            <li>Go to "Board" → "Configure" → "Swimlanes"</li>
+                            <li>Add swimlanes for key work categories:
+                                <ul>
+                                    <li>Features (JQL: <code>issuetype = "Feature" OR issuetype = "Story"</code>)</li>
+                                    <li>Bug Fixes (JQL: <code>issuetype = Bug</code>)</li>
+                                    <li>Technical Debt (JQL: <code>labels = "tech-debt" OR labels = "refactoring"</code>)</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <h3>Kanban Metrics to Track</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header">Lead Time</div>
+                        <p>Time from when a work item is created until it's delivered.</p>
+                        <ul>
+                            <li>Measures end-to-end delivery time</li>
+                            <li>Critical for customer satisfaction</li>
+                            <li>Target: Consistently decreasing over time</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">Cycle Time</div>
+                        <p>Time from when work begins until it's completed.</p>
+                        <ul>
+                            <li>Measures team efficiency</li>
+                            <li>More directly under team control</li>
+                            <li>Target: 85% of items under your SLA</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">Throughput</div>
+                        <p>Number of work items completed per time period.</p>
+                        <ul>
+                            <li>Measures team output</li>
+                            <li>More stable than velocity</li>
+                            <li>Target: Consistent or increasing</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">Flow Efficiency</div>
+                        <p>Ratio of active work time to total lead time.</p>
+                        <ul>
+                            <li>Identifies waiting waste</li>
+                            <li>Industry average: 15-20%</li>
+                            <li>Target: >40% indicates good flow</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>New Meeting Structure</h3>
+                
+                <div class="flex">
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">Daily Standup</div>
+                            <p>Focus shifts from "three questions" to "flow" discussion:</p>
+                            <ul>
+                                <li>Review blocked items</li>
+                                <li>Identify WIP limit violations</li>
+                                <li>Address bottlenecks</li>
+                                <li>Prioritize completing work over starting new work</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">Replenishment Meeting</div>
+                            <p>Replaces Sprint Planning:</p>
+                            <ul>
+                                <li>Shorter (30 minutes)</li>
+                                <li>More frequent (as needed)</li>
+                                <li>Focus on refilling the "Ready" column</li>
+                                <li>Ensure items are properly defined</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex">
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">Service Delivery Review</div>
+                            <p>Combines elements of Sprint Review and Retrospective:</p>
+                            <ul>
+                                <li>Review flow metrics</li>
+                                <li>Examine process policies</li>
+                                <li>Adjust WIP limits if needed</li>
+                                <li>Identify improvement opportunities</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">Delivery Planning</div>
+                            <p>Forward-looking planning based on flow metrics:</p>
+                            <ul>
+                                <li>Use historical cycle time for forecasting</li>
+                                <li>Monte Carlo simulations for date ranges</li>
+                                <li>Communicate probability-based delivery dates</li>
+                                <li>No more fixed commitments</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="cta-section">
+                <h2>Ready for the Transition?</h2>
+                <p>Moving from Scrum to Kanban is a journey that requires patience, learning, and adaptation. The benefits of improved flow, flexibility, and delivery predictability make it worthwhile.</p>
+                
+                <div class="highlight" style="background-color: rgba(255,255,255,0.1); border-left: 4px solid white; color: white;">
+                    <p>"Continuous improvement is better than delayed perfection." - Mark Twain</p>
+                </div>
+                
+                <h3 style="color: white; border: none;">Next Steps</h3>
+                
+                <div class="grid" style="margin-top: 2rem;">
+                    <div class="card" style="background-color: rgba(255,255,255,0.9); color: var(--secondary);">
+                        <div class="card-header" style="color: var(--secondary);">Phase 1: Preparation</div>
+                        <ul>
+                            <li>Map your current workflow</li>
+                            <li>Configure Jira board with swimlanes</li>
+                            <li>Train team on Kanban principles</li>
+                            <li>Establish initial WIP limits</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card" style="background-color: rgba(255,255,255,0.9); color: var(--secondary);">
+                        <div class="card-header" style="color: var(--secondary);">Phase 2: Transition</div>
+                        <ul>
+                            <li>Complete current sprint</li>
+                            <li>Move in-progress items to Kanban board</li>
+                            <li>Implement new meeting structure</li>
+                            <li>Begin tracking Kanban metrics</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card" style="background-color: rgba(255,255,255,0.9); color: var(--secondary);">
+                        <div class="card-header" style="color: var(--secondary);">Phase 3: Refinement</div>
+                        <ul>
+                            <li>Adjust WIP limits based on data</li>
+                            <li>Fine-tune release process</li>
+                            <li>Evolve team roles</li>
+                            <li>Continuous improvement cycles</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Progress bar functionality
+        window.onscroll = function() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+</html>
+        
+        <div class="slide" id="differences">
+            <div class="slide-content">
+                <h2>Key Differences: Scrum vs. Kanban</h2>
+                
+                <div class="highlight">
+                    <p>Kanban and Scrum both aim to help teams deliver value efficiently, but they approach the problem differently. Understanding these fundamental differences will help your team make a smoother transition.</p>
+                </div>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <th>Aspect</th>
+                        <th>Scrum</th>
+                        <th>Kanban</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Cadence</strong></td>
+                        <td>Fixed-length sprints (1-4 weeks)</td>
+                        <td>Continuous flow, no time boxes</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Release Methodology</strong></td>
+                        <td>At the end of each sprint</td>
+                        <td>Continuous or on-demand</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Roles</strong></td>
+                        <td>Scrum Master, Product Owner, Development Team</td>
+                        <td>No prescribed roles (typically Flow Manager, Service Delivery Manager)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Key Metrics</strong></td>
+                        <td>Velocity, Burndown charts</td>
+                        <td>Lead Time, Cycle Time, WIP, Flow Efficiency</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Change Philosophy</strong></td>
+                        <td>Changes shouldn't happen during sprint</td>
+                        <td>Changes can happen any time</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Board</strong></td>
+                        <td>Reset after each sprint</td>
+                        <td>Persistent, evolving</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Work Limiting</strong></td>
+                        <td>Limited by sprint commitment</td>
+                        <td>Limited by explicit WIP limits</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Meetings</strong></td>
+                        <td>Planning, Daily, Review, Retrospective</td>
+                        <td>Optional (typically just Daily and Replenishment)</td>
+                    </tr>
+                </table>
+                
+                <h3>Mindset Changes Required</h3>
+                
+                <div class="flex">
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">From Time-Based to Flow-Based</div>
+                            <p>Instead of thinking about what can be accomplished in a sprint, focus on how work flows through your system. The goal shifts from "completing everything we committed to in the sprint" to "ensuring work flows smoothly with minimal delays."</p>
+                        </div>
+                    </div>
+                    
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">From Batch Commitments to Just-In-Time</div>
+                            <p>Rather than planning work in large batches, adopt a pull-based system where you take on new work only when capacity becomes available. This requires a constant state of readiness in your backlog.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex">
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">From Velocity to Flow Metrics</div>
+                            <p>Success is no longer measured by how many story points you complete in a sprint, but by how quickly and predictably work moves through your system. Focus on lead time, cycle time, and flow efficiency.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">From Fixed Roles to Team Flexibility</div>
+                            <p>Kanban doesn't prescribe specific roles, which means more shared responsibility for process management, quality, and delivery across all team members.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide" id="roles">
+            <div class="slide-content">
+                <h2>Role Changes in Kanban</h2>
+                
+                <h3>Scrum Master Evolution</h3>
+                
+                <div class="highlight">
+                    <p>There is no formal requirement for a Scrum Master in Kanban. This role typically evolves into one of several options:</p>
+                </div>
+                
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header">Flow Manager/Kanban Lead</div>
+                        <ul>
+                            <li>Helps optimize workflow</li>
+                            <li>Removes impediments</li>
+                            <li>Facilitates continuous improvement</li>
+                            <li>Coaches team on Kanban principles</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">Service Delivery Manager</div>
+                        <ul>
+                            <li>Focuses on delivery predictability</li>
+                            <li>Ensures commitments are met</li>
+                            <li>Manages stakeholder expectations</li>
+                            <li>Monitors and improves flow metrics</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="flex">
+                    <div class="column">
+                        <h4>Redistributed Responsibilities</h4>
+                        <ul>
+                            <li><strong>Process coaching:</strong> Less prescriptive, focuses on flow optimization</li>
+                            <li><strong>Impediment removal:</strong> Becomes everyone's responsibility</li>
+                            <li><strong>Meeting facilitation:</strong> Fewer prescribed meetings to manage</li>
+                            <li><strong>Team protection:</strong> Less needed as work is pulled based on capacity</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="column">
+                        <h4>Benefits of This Change</h4>
+                        <ul>
+                            <li>Reduced overhead from fewer ceremonies</li>
+                            <li>Increased team autonomy and self-organization</li>
+                            <li>Better focus on flow metrics rather than sprint commitments</li>
+                            <li>Natural adaptation based on data rather than prescribed roles</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>Product Owner Evolution</h3>
+                
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-header">From Sprint Planning to Continuous Prioritization</div>
+                        <ul>
+                            <li>Less focus on preparing work for sprints</li>
+                            <li>Continuous refinement and prioritization of backlog items</li>
+                            <li>Keeping the "Ready" column stocked with well-defined items</li>
+                            <li>More frequent, smaller replenishment meetings</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">From Backlog to Flow Management</div>
+                        <ul>
+                            <li>Less concern with comprehensive backlog</li>
+                            <li>Focus on managing the flow of high-priority items</li>
+                            <li>Creating policies for different work types</li>
+                            <li>Establishing "classes of service" for different priorities</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="flex">
+                    <div class="column">
+                        <h4>Stakeholder Management Changes</h4>
+                        <ul>
+                            <li>No more sprint reviews tied to fixed schedules</li>
+                            <li>Need for alternative stakeholder touchpoints</li>
+                            <li>More frequent but shorter feedback sessions</li>
+                            <li>Demonstrations based on completed work, not sprint boundaries</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="column">
+                        <h4>Metrics Focus Shift</h4>
+                        <ul>
+                            <li>Less concern with velocity and sprint burndown</li>
+                            <li>More interest in cycle time, lead time, and flow efficiency</li>
+                            <li>Using metrics to make delivery predictions based on historical data</li>
+                            <li>Flow-based forecasting rather than sprint-based planning</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slide" id="releases">
+            <div class="slide-content">
+                <h2>Release Strategies in Kanban</h2>
+                
+                <div class="highlight">
+                    <p>When switching from Scrum to Kanban, your release approach shifts from a sprint-based cadence to a more flexible flow-based model. This requires rethinking how and when you deliver value to users.</p>
+                </div>
+                
+                <div class="release-strategy">
+                    <div class="release-card">
+                        <h4>Continuous Delivery</h4>
+                        <ul>
+                            <li>Release whenever items reach "Done" status</li>
+                            <li>Each feature can potentially go live independently</li>
+                            <li>Requires robust CI/CD pipelines</li>
+                            <li>Automated testing is essential</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="release-card">
+                        <h4>Cadence-based Releases</h4>
+                        <ul>
+                            <li>Set regular intervals for releases (weekly, bi-weekly)</li>
+                            <li>Collect all "Done" items since last release</li>
+                            <li>More predictable for stakeholders</li>
+                            <li>Better for operations teams with fixed schedules</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="release-card">
+                        <h4>Threshold-based Releases</h4>
+                        <ul>
+                            <li>Release when you've accumulated enough value</li>
+                            <li>Example: When 5 high-value items are ready</li>
+                            <li>Ensures meaningful releases</li>
+                            <li>Balances release overhead with value delivery</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="release-card">
+                        <h4>On-Demand Releases</h4>
+                        <ul>
+                            <li>Release based on business needs</li>
+                            <li>Responsive to market conditions</li>
+                            <li>Useful for competitive pressures</li>
+                            <li>Requires flexible operations team</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>Version Tracking for Frequent Releases</h3>
+                
+                <div class="version-chart">
+                    <h4>Semantic Versioning Strategy</h4>
+                    <div class="grid">
+                        <div class="card">
+                            <div class="card-header">Traditional SemVer</div>
+                            <p><strong>2.4.7</strong></p>
+                            <ul>
+                                <li><strong>Major (2):</strong> Breaking changes</li>
+                                <li><strong>Minor (4):</strong> New features, backward compatible</li>
+                                <li><strong>Patch (7):</strong> Bug fixes only</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">Date-Based Versioning</div>
+                            <p><strong>25.03.05</strong></p>
+                            <ul>
+                                <li><strong>Year (25):</strong> 2-digit year</li>
+                                <li><strong>Month (03):</strong> Month of release</li>
+                                <li><strong>Sequence (05):</strong> 5th release in March</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">Continuous Build Versioning</div>
+                            <p><strong>2.0.{build_number}</strong></p>
+                            <ul>
+                                <li>Uses CI/CD pipeline build number</li>
+                                <li>Perfect traceability to builds</li>
+                                <li>Automatic incrementing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Version Tracking Implementation</h3>
+                
+                <div class="flex">
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">Version Manifests</div>
+                            <p>Create a JSON file that lists all components and their versions</p>
+                            <pre style="background-color: #f4f5f7; padding: 1rem; border-radius: 4px; overflow-x: auto;">
+{
+  "api": "3.2.45",
+  "ui": "3.2.47",
+  "database": "3.1.0",
+  "released": "2025-03-19T14:30:00Z"
+}</pre>
+                        </div>
+                    </div>
+                    
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">Database Version Tracking</div>
+                            <ul>
+                                <li>Maintain a versions table in your database</li>
+                                <li>Record schema versions and data migrations</li>
+                                <li>Essential for troubleshooting production issues</li>
+                                <li>Helps with rollback planning</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex">
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">Version API Endpoint</div>
+                            <ul>
+                                <li>Create an endpoint that returns version details</li>
+                                <li>Include build date, environment info</li>
+                                <li>List component versions</li>
+                                <li>Useful for support and debugging</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="column">
+                        <div class="card">
+                            <div class="card-header">Release Notes Automation</div>
+                            <ul>
+                                <li>Generate from commit messages or ticket IDs</li>
+                                <li>Tag releases in your repository</li>
+                                <li>Maintain a CHANGELOG.md file</li>
+                                <li>Use conventional commits for structure</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
